@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       [nomeCompleto, email, telefone]
     );
 
-    return NextResponse.json({ id: result.rows[0].id }, { status: 201 });
+    return NextResponse.json({ candidatoId: result.rows[0].id }, { status: 201 });
   } catch (error) {
     console.error('Erro ao criar candidato:', error);
     return NextResponse.json(
