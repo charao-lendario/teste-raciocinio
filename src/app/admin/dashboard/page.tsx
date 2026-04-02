@@ -27,11 +27,11 @@ interface Candidato {
   nome_completo: string;
   email: string;
   telefone: string;
-  nota: number;
-  total_questoes: number;
-  percentual: number;
-  aprovado: boolean;
-  tempo_gasto: number;
+  nota: number | null;
+  total_questoes: number | null;
+  percentual: number | null;
+  aprovado: boolean | null;
+  tempo_gasto: number | null;
   created_at: string;
 }
 
@@ -182,11 +182,12 @@ export default function DashboardPage() {
     return matchSearch && matchFilter;
   });
 
-  const totalAprovados = candidatos.filter((c) => c.aprovado).length;
-  const totalReprovados = candidatos.filter((c) => !c.aprovado).length;
+  const completados = candidatos.filter((c) => c.percentual != null);
+  const totalAprovados = candidatos.filter((c) => c.aprovado === true).length;
+  const totalReprovados = completados.filter((c) => c.aprovado === false).length;
   const mediaGeral =
-    candidatos.length > 0
-      ? (candidatos.reduce((acc, c) => acc + c.percentual, 0) / candidatos.length).toFixed(1)
+    completados.length > 0
+      ? (completados.reduce((acc, c) => acc + (c.percentual ?? 0), 0) / completados.length).toFixed(1)
       : '0.0';
 
   return (
@@ -357,16 +358,20 @@ export default function DashboardPage() {
                       <td className="px-4 py-3 text-white font-medium">{c.nome_completo}</td>
                       <td className="px-4 py-3 text-gray-400">{c.email}</td>
                       <td className="px-4 py-3 text-gray-400">{c.telefone}</td>
-                      <td className="px-4 py-3 text-gray-300">{c.nota}/20</td>
+                      <td className="px-4 py-3 text-gray-300">{c.nota != null ? `${c.nota}/20` : '—'}</td>
                       <td
                         className={`px-4 py-3 font-semibold ${
-                          c.percentual >= 70 ? 'text-green-400' : 'text-red-400'
+                          c.percentual != null ? (c.percentual >= 70 ? 'text-green-400' : 'text-red-400') : 'text-gray-500'
                         }`}
                       >
-                        {c.percentual.toFixed(1)}%
+                        {c.percentual != null ? `${c.percentual.toFixed(1)}%` : 'Pendente'}
                       </td>
                       <td className="px-4 py-3">
-                        {c.aprovado ? (
+                        {c.percentual == null ? (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-yellow-500/15 text-yellow-400 border border-yellow-500/20">
+                            PENDENTE
+                          </span>
+                        ) : c.aprovado ? (
                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-green-500/15 text-green-400 border border-green-500/20">
                             <CheckCircle size={12} />
                             APROVADO
@@ -476,22 +481,22 @@ export default function DashboardPage() {
                     <div className="bg-[#0d1729] border border-[#1e3050] rounded-xl p-4 text-center">
                       <TrendingUp
                         size={16}
-                        className={`mx-auto mb-2 ${detalhe.candidato.percentual >= 70 ? 'text-green-400' : 'text-red-400'}`}
+                        className={`mx-auto mb-2 ${(detalhe.candidato.percentual ?? 0) >= 70 ? 'text-green-400' : 'text-red-400'}`}
                       />
                       <p className="text-gray-500 text-xs uppercase tracking-wider font-medium mb-1">Percentual</p>
                       <p
                         className={`text-2xl font-bold ${
-                          detalhe.candidato.percentual >= 70 ? 'text-green-400' : 'text-red-400'
+                          (detalhe.candidato.percentual ?? 0) >= 70 ? 'text-green-400' : 'text-red-400'
                         }`}
                       >
-                        {detalhe.candidato.percentual.toFixed(1)}%
+                        {(detalhe.candidato.percentual ?? 0).toFixed(1)}%
                       </p>
                     </div>
                     <div className="bg-[#0d1729] border border-[#1e3050] rounded-xl p-4 text-center">
                       <Clock size={16} className="text-blue-400 mx-auto mb-2" />
                       <p className="text-gray-500 text-xs uppercase tracking-wider font-medium mb-1">Tempo</p>
                       <p className="text-white text-2xl font-bold">
-                        {formatTempo(detalhe.candidato.tempo_gasto)}
+                        {detalhe.candidato.tempo_gasto != null ? formatTempo(detalhe.candidato.tempo_gasto) : '—'}
                       </p>
                     </div>
                     <div className="bg-[#0d1729] border border-[#1e3050] rounded-xl p-4 text-center flex flex-col items-center">
@@ -519,16 +524,16 @@ export default function DashboardPage() {
                   <div className="bg-[#0d1729] border border-[#1e3050] rounded-xl p-4">
                     <div className="flex items-center justify-between mb-2">
                       <p className="text-gray-400 text-xs uppercase tracking-wider font-medium">Desempenho Geral</p>
-                      <p className={`text-sm font-bold ${detalhe.candidato.percentual >= 70 ? 'text-green-400' : 'text-red-400'}`}>
-                        {detalhe.candidato.percentual.toFixed(1)}%
+                      <p className={`text-sm font-bold ${(detalhe.candidato.percentual ?? 0) >= 70 ? 'text-green-400' : 'text-red-400'}`}>
+                        {(detalhe.candidato.percentual ?? 0).toFixed(1)}%
                       </p>
                     </div>
                     <div className="w-full bg-[#1e3050] rounded-full h-2.5">
                       <div
                         className={`h-2.5 rounded-full transition-all ${
-                          detalhe.candidato.percentual >= 70 ? 'bg-green-400' : 'bg-red-400'
+                          (detalhe.candidato.percentual ?? 0) >= 70 ? 'bg-green-400' : 'bg-red-400'
                         }`}
-                        style={{ width: `${detalhe.candidato.percentual}%` }}
+                        style={{ width: `${detalhe.candidato.percentual ?? 0}%` }}
                       />
                     </div>
                     <div className="flex justify-between mt-1.5">
