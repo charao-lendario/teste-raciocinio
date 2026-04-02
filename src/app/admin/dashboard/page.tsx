@@ -118,7 +118,14 @@ export default function DashboardPage() {
       if (!res.ok) throw new Error('Erro ao buscar candidatos');
 
       const data = await res.json();
-      setCandidatos(data);
+      setCandidatos(
+        (data as Candidato[]).map((c) => ({
+          ...c,
+          nota: c.nota != null ? Number(c.nota) : null,
+          percentual: c.percentual != null ? Number(c.percentual) : null,
+          tempo_gasto: c.tempo_gasto != null ? Number(c.tempo_gasto) : null,
+        }))
+      );
     } catch (err) {
       console.error(err);
     } finally {
@@ -154,8 +161,16 @@ export default function DashboardPage() {
 
       if (!res.ok) throw new Error('Erro ao buscar detalhe');
 
-      const data = await res.json();
-      setDetalhe(data);
+      const data = await res.json() as CandidatoDetalhe;
+      setDetalhe({
+        ...data,
+        candidato: {
+          ...data.candidato,
+          nota: data.candidato.nota != null ? Number(data.candidato.nota) : null,
+          percentual: data.candidato.percentual != null ? Number(data.candidato.percentual) : null,
+          tempo_gasto: data.candidato.tempo_gasto != null ? Number(data.candidato.tempo_gasto) : null,
+        },
+      });
     } catch (err) {
       console.error(err);
     } finally {
