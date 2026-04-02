@@ -20,6 +20,7 @@ import {
   Calendar,
   Clock,
   Award,
+  Download,
 } from 'lucide-react';
 
 interface Candidato {
@@ -166,6 +167,136 @@ export default function DashboardPage() {
     setDetalhe(null);
   }
 
+  function downloadPDF(det: CandidatoDetalhe) {
+    const c = det.candidato;
+    const perc = (c.percentual ?? 0).toFixed(1);
+    const status = c.aprovado ? 'APROVADO' : 'REPROVADO';
+    const tempo = c.tempo_gasto != null ? formatTempo(c.tempo_gasto) : '—';
+    const acertos = c.nota ?? 0;
+    const dataFormatada = formatDate(c.created_at);
+
+    const respostasHTML = det.respostas.map((r) => `
+      <tr style="border-bottom:1px solid #e5e7eb;">
+        <td style="padding:10px 12px;font-weight:600;color:#374151;">${r.questao_numero}</td>
+        <td style="padding:10px 12px;color:${r.acertou ? '#16a34a' : '#dc2626'};">${r.resposta_selecionada || '—'}</td>
+        <td style="padding:10px 12px;color:#16a34a;">${r.resposta_correta}</td>
+        <td style="padding:10px 12px;text-align:center;">
+          <span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;color:white;background:${r.acertou ? '#16a34a' : '#dc2626'};">
+            ${r.acertou ? 'Correto' : 'Errado'}
+          </span>
+        </td>
+      </tr>
+    `).join('');
+
+    const html = `
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8">
+        <title>Resultado - ${c.nome_completo}</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1f2937; background: white; padding: 40px; }
+          .header { text-align: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 3px solid #0a1628; }
+          .header h1 { font-size: 22px; color: #0a1628; margin-bottom: 4px; }
+          .header p { font-size: 13px; color: #6b7280; }
+          .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+          .info-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px; }
+          .info-card .label { font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 4px; }
+          .info-card .value { font-size: 14px; color: #1f2937; font-weight: 500; }
+          .result-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+          .result-card { text-align: center; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; }
+          .result-card .number { font-size: 28px; font-weight: 700; }
+          .result-card .label { font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-top: 4px; }
+          .status-badge { display: inline-block; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 700; letter-spacing: 1px; color: white; }
+          .status-approved { background: #16a34a; }
+          .status-failed { background: #dc2626; }
+          .progress-bar { width: 100%; height: 10px; background: #e5e7eb; border-radius: 5px; margin: 12px 0 24px 0; overflow: hidden; }
+          .progress-fill { height: 100%; border-radius: 5px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+          thead th { background: #0a1628; color: white; padding: 10px 12px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+          tbody tr:nth-child(even) { background: #f9fafb; }
+          .section-title { font-size: 15px; font-weight: 700; color: #0a1628; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e5e7eb; }
+          .footer { text-align: center; margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #9ca3af; }
+          @media print { body { padding: 20px; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>Teste de Raciocinio Logico e Atencao Concentrada</h1>
+          <p>Relatorio Individual do Candidato</p>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="label">Nome Completo</div>
+            <div class="value">${c.nome_completo}</div>
+          </div>
+          <div class="info-card">
+            <div class="label">Email</div>
+            <div class="value">${c.email}</div>
+          </div>
+          <div class="info-card">
+            <div class="label">Telefone</div>
+            <div class="value">${c.telefone}</div>
+          </div>
+        </div>
+
+        <div class="result-grid">
+          <div class="result-card">
+            <div class="number" style="color:#c9a84c;">${acertos}/20</div>
+            <div class="label">Acertos</div>
+          </div>
+          <div class="result-card">
+            <div class="number" style="color:${c.aprovado ? '#16a34a' : '#dc2626'};">${perc}%</div>
+            <div class="label">Aproveitamento</div>
+          </div>
+          <div class="result-card">
+            <div class="number" style="color:#374151;">${tempo}</div>
+            <div class="label">Tempo</div>
+          </div>
+          <div class="result-card">
+            <span class="status-badge ${c.aprovado ? 'status-approved' : 'status-failed'}">${status}</span>
+            <div class="label" style="margin-top:8px;">Status</div>
+          </div>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:${c.percentual ?? 0}%;background:${c.aprovado ? '#16a34a' : '#dc2626'};"></div>
+        </div>
+
+        <div class="section-title">Detalhamento das Respostas</div>
+        <table>
+          <thead>
+            <tr>
+              <th style="border-radius:8px 0 0 0;">Questao</th>
+              <th>Resposta do Candidato</th>
+              <th>Resposta Correta</th>
+              <th style="text-align:center;border-radius:0 8px 0 0;">Resultado</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${respostasHTML}
+          </tbody>
+        </table>
+
+        <div class="footer">
+          Relatorio gerado em ${dataFormatada} &bull; Teste de Raciocinio Logico e Atencao Concentrada
+        </div>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(html);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+      }, 300);
+    }
+  }
+
   function handleLogout() {
     localStorage.removeItem('admin_token');
     router.push('/admin');
@@ -193,28 +324,30 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a1628] via-[#0d1a30] to-[#0a1628]">
       {/* Header */}
-      <header className="bg-[#111d32]/90 border-b border-[#1e3050] px-6 py-4 flex items-center justify-between backdrop-blur-sm sticky top-0 z-10">
-        <div className="flex items-center gap-4">
-          <BarChart3 size={24} color="#c9a84c" />
-          <div>
-            <h1 className="text-white font-bold text-lg leading-none">Painel de Resultados</h1>
-            <span className="text-[#c9a84c] text-xs font-semibold uppercase tracking-widest">
-              Painel RH
-            </span>
+      <header className="bg-[#111d32]/90 border-b border-[#1e3050] backdrop-blur-sm sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-8 lg:px-12 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <BarChart3 size={24} color="#c9a84c" />
+            <div>
+              <h1 className="text-white font-bold text-lg leading-none">Painel de Resultados</h1>
+              <span className="text-[#c9a84c] text-xs font-semibold uppercase tracking-widest">
+                Painel RH
+              </span>
+            </div>
           </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 bg-[#1e3050] hover:bg-[#243356] border border-[#243356] hover:border-[#c9a84c]/40 text-gray-300 hover:text-white rounded-xl px-4 py-2 transition-all text-sm font-medium"
+          >
+            <LogOut size={16} />
+            Sair
+          </button>
         </div>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 bg-[#1e3050] hover:bg-[#243356] border border-[#243356] hover:border-[#c9a84c]/40 text-gray-300 hover:text-white rounded-xl px-4 py-2 transition-all text-sm font-medium"
-        >
-          <LogOut size={16} />
-          Sair
-        </button>
       </header>
 
-      <main className="p-6 flex flex-col gap-6 max-w-screen-xl mx-auto">
+      <main className="max-w-7xl mx-auto px-8 lg:px-12 py-8 flex flex-col gap-8">
         {/* Stats cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           {/* Total */}
           <div className="bg-[#111d32] border border-[#1e3050] rounded-2xl p-6 flex items-center gap-4 relative overflow-hidden">
             <div className="bg-blue-500/10 rounded-full p-3 shrink-0">
@@ -587,11 +720,18 @@ export default function DashboardPage() {
                   )}
                 </div>
 
-                {/* Footer close button */}
-                <div className="px-6 py-4 border-t border-[#1e3050] bg-[#111d32] shrink-0">
+                {/* Footer buttons */}
+                <div className="px-6 py-4 border-t border-[#1e3050] bg-[#111d32] shrink-0 flex gap-3">
+                  <button
+                    onClick={() => downloadPDF(detalhe)}
+                    className="flex-1 flex items-center justify-center gap-2 bg-[#c9a84c] hover:bg-[#b8952f] text-[#0a1628] font-semibold rounded-xl py-3 transition-all text-sm cursor-pointer"
+                  >
+                    <Download size={16} />
+                    Baixar PDF
+                  </button>
                   <button
                     onClick={closeModal}
-                    className="w-full border border-[#243356] hover:border-[#c9a84c]/40 text-gray-300 hover:text-white rounded-xl py-3 transition-all text-sm font-semibold hover:bg-[#1e3050]/50"
+                    className="flex-1 border border-[#243356] hover:border-[#c9a84c]/40 text-gray-300 hover:text-white rounded-xl py-3 transition-all text-sm font-semibold hover:bg-[#1e3050]/50 cursor-pointer"
                   >
                     Fechar
                   </button>
