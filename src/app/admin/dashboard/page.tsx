@@ -22,6 +22,7 @@ import {
   Award,
   Download,
 } from 'lucide-react';
+import { questions } from '@/lib/questions';
 
 interface Candidato {
   id: number;
@@ -169,24 +170,49 @@ export default function DashboardPage() {
 
   function downloadPDF(det: CandidatoDetalhe) {
     const c = det.candidato;
-    const perc = (c.percentual ?? 0).toFixed(1);
+    const perc = (c.percentual ?? 0).toFixed(0);
     const status = c.aprovado ? 'APROVADO' : 'REPROVADO';
+    const statusColor = c.aprovado ? '#16a34a' : '#dc2626';
+    const statusBg = c.aprovado ? '#dcfce7' : '#fee2e2';
     const tempo = c.tempo_gasto != null ? formatTempo(c.tempo_gasto) : '—';
     const acertos = c.nota ?? 0;
+    const erros = 20 - acertos;
     const dataFormatada = formatDate(c.created_at);
 
-    const respostasHTML = det.respostas.map((r) => `
-      <tr style="border-bottom:1px solid #e5e7eb;">
-        <td style="padding:10px 12px;font-weight:600;color:#374151;">${r.questao_numero}</td>
-        <td style="padding:10px 12px;color:${r.acertou ? '#16a34a' : '#dc2626'};">${r.resposta_selecionada || '—'}</td>
-        <td style="padding:10px 12px;color:#16a34a;">${r.resposta_correta}</td>
-        <td style="padding:10px 12px;text-align:center;">
-          <span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;color:white;background:${r.acertou ? '#16a34a' : '#dc2626'};">
-            ${r.acertou ? 'Correto' : 'Errado'}
-          </span>
-        </td>
-      </tr>
-    `).join('');
+    const questoesHTML = det.respostas.map((r) => {
+      const q = questions.find((qq) => qq.id === r.questao_numero);
+      const enunciado = q?.text ?? `Questao ${r.questao_numero}`;
+      const isCorrect = r.acertou;
+
+      return `
+        <div style="background:${isCorrect ? '#f0fdf4' : '#fef2f2'};border:1px solid ${isCorrect ? '#bbf7d0' : '#fecaca'};border-left:4px solid ${isCorrect ? '#16a34a' : '#dc2626'};border-radius:8px;padding:16px;margin-bottom:12px;page-break-inside:avoid;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+            <span style="background:${isCorrect ? '#16a34a' : '#dc2626'};color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;">
+              Questao ${r.questao_numero} - ${isCorrect ? 'CORRETA' : 'ERRADA'}
+            </span>
+          </div>
+          <p style="font-size:13px;color:#374151;line-height:1.5;margin-bottom:10px;font-weight:500;">
+            ${enunciado}
+          </p>
+          <div style="display:flex;gap:24px;flex-wrap:wrap;">
+            <div>
+              <span style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Resposta do candidato:</span>
+              <span style="margin-left:6px;font-size:13px;color:${isCorrect ? '#16a34a' : '#dc2626'};font-weight:600;">
+                ${r.resposta_selecionada || 'Nao respondeu'}
+              </span>
+            </div>
+            ${!isCorrect ? `
+              <div>
+                <span style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Resposta correta:</span>
+                <span style="margin-left:6px;font-size:13px;color:#16a34a;font-weight:600;">
+                  ${r.resposta_correta}
+                </span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
 
     const html = `
       <!DOCTYPE html>
@@ -196,92 +222,106 @@ export default function DashboardPage() {
         <title>Resultado - ${c.nome_completo}</title>
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1f2937; background: white; padding: 40px; }
-          .header { text-align: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 3px solid #0a1628; }
-          .header h1 { font-size: 22px; color: #0a1628; margin-bottom: 4px; }
-          .header p { font-size: 13px; color: #6b7280; }
-          .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 28px; }
-          .info-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px; }
-          .info-card .label { font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 4px; }
-          .info-card .value { font-size: 14px; color: #1f2937; font-weight: 500; }
-          .result-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 28px; }
-          .result-card { text-align: center; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; }
-          .result-card .number { font-size: 28px; font-weight: 700; }
-          .result-card .label { font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-top: 4px; }
-          .status-badge { display: inline-block; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 700; letter-spacing: 1px; color: white; }
-          .status-approved { background: #16a34a; }
-          .status-failed { background: #dc2626; }
-          .progress-bar { width: 100%; height: 10px; background: #e5e7eb; border-radius: 5px; margin: 12px 0 24px 0; overflow: hidden; }
-          .progress-fill { height: 100%; border-radius: 5px; }
-          table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-          thead th { background: #0a1628; color: white; padding: 10px 12px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
-          tbody tr:nth-child(even) { background: #f9fafb; }
-          .section-title { font-size: 15px; font-weight: 700; color: #0a1628; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e5e7eb; }
-          .footer { text-align: center; margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #9ca3af; }
-          @media print { body { padding: 20px; } }
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1f2937; background: white; }
+          @media print {
+            body { padding: 0; }
+            .page { padding: 24px; }
+            .no-break { page-break-inside: avoid; }
+          }
+          @page { margin: 15mm; }
         </style>
       </head>
       <body>
-        <div class="header">
-          <h1>Teste de Raciocinio Logico e Atencao Concentrada</h1>
-          <p>Relatorio Individual do Candidato</p>
-        </div>
+        <div class="page" style="padding:40px;max-width:800px;margin:0 auto;">
 
-        <div class="info-grid">
-          <div class="info-card">
-            <div class="label">Nome Completo</div>
-            <div class="value">${c.nome_completo}</div>
+          <!-- CABECALHO -->
+          <div style="text-align:center;margin-bottom:32px;padding-bottom:20px;border-bottom:3px solid #0a1628;">
+            <h1 style="font-size:24px;color:#0a1628;margin-bottom:6px;letter-spacing:-0.5px;">
+              Teste de Raciocinio Logico e Atencao Concentrada
+            </h1>
+            <p style="font-size:14px;color:#6b7280;">Relatorio Individual de Desempenho</p>
           </div>
-          <div class="info-card">
-            <div class="label">Email</div>
-            <div class="value">${c.email}</div>
-          </div>
-          <div class="info-card">
-            <div class="label">Telefone</div>
-            <div class="value">${c.telefone}</div>
-          </div>
-        </div>
 
-        <div class="result-grid">
-          <div class="result-card">
-            <div class="number" style="color:#c9a84c;">${acertos}/20</div>
-            <div class="label">Acertos</div>
+          <!-- DADOS DO CANDIDATO -->
+          <div class="no-break" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
+            <h2 style="font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:14px;">
+              Dados do Candidato
+            </h2>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 32px;">
+              <div>
+                <span style="font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Nome Completo</span>
+                <p style="font-size:15px;color:#1e293b;font-weight:600;margin-top:2px;">${c.nome_completo}</p>
+              </div>
+              <div>
+                <span style="font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Email</span>
+                <p style="font-size:15px;color:#1e293b;font-weight:500;margin-top:2px;">${c.email}</p>
+              </div>
+              <div>
+                <span style="font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Telefone</span>
+                <p style="font-size:15px;color:#1e293b;font-weight:500;margin-top:2px;">${c.telefone}</p>
+              </div>
+              <div>
+                <span style="font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Data de Realizacao</span>
+                <p style="font-size:15px;color:#1e293b;font-weight:500;margin-top:2px;">${dataFormatada}</p>
+              </div>
+            </div>
           </div>
-          <div class="result-card">
-            <div class="number" style="color:${c.aprovado ? '#16a34a' : '#dc2626'};">${perc}%</div>
-            <div class="label">Aproveitamento</div>
-          </div>
-          <div class="result-card">
-            <div class="number" style="color:#374151;">${tempo}</div>
-            <div class="label">Tempo</div>
-          </div>
-          <div class="result-card">
-            <span class="status-badge ${c.aprovado ? 'status-approved' : 'status-failed'}">${status}</span>
-            <div class="label" style="margin-top:8px;">Status</div>
-          </div>
-        </div>
 
-        <div class="progress-bar">
-          <div class="progress-fill" style="width:${c.percentual ?? 0}%;background:${c.aprovado ? '#16a34a' : '#dc2626'};"></div>
-        </div>
+          <!-- RESULTADO PRINCIPAL -->
+          <div class="no-break" style="background:${statusBg};border:2px solid ${statusColor};border-radius:12px;padding:24px;margin-bottom:24px;text-align:center;">
+            <div style="font-size:48px;font-weight:800;color:${statusColor};line-height:1;">${perc}%</div>
+            <div style="font-size:20px;font-weight:700;color:${statusColor};margin-top:4px;letter-spacing:2px;">${status}</div>
+            <p style="font-size:13px;color:#6b7280;margin-top:8px;">
+              O candidato acertou <strong>${acertos} de 20</strong> questoes em <strong>${tempo}</strong>
+            </p>
+            <div style="margin-top:14px;background:white;border-radius:6px;height:12px;overflow:hidden;">
+              <div style="height:100%;width:${c.percentual ?? 0}%;background:${statusColor};border-radius:6px;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px;">
+              <span style="font-size:10px;color:#94a3b8;">0%</span>
+              <span style="font-size:10px;color:#94a3b8;font-weight:600;">Minimo: 70%</span>
+              <span style="font-size:10px;color:#94a3b8;">100%</span>
+            </div>
+          </div>
 
-        <div class="section-title">Detalhamento das Respostas</div>
-        <table>
-          <thead>
-            <tr>
-              <th style="border-radius:8px 0 0 0;">Questao</th>
-              <th>Resposta do Candidato</th>
-              <th>Resposta Correta</th>
-              <th style="text-align:center;border-radius:0 8px 0 0;">Resultado</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${respostasHTML}
-          </tbody>
-        </table>
+          <!-- RESUMO NUMERICO -->
+          <div class="no-break" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:28px;">
+            <div style="text-align:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;">
+              <div style="font-size:28px;font-weight:800;color:#c9a84c;">${acertos}</div>
+              <div style="font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Acertos</div>
+            </div>
+            <div style="text-align:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;">
+              <div style="font-size:28px;font-weight:800;color:#dc2626;">${erros}</div>
+              <div style="font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Erros</div>
+            </div>
+            <div style="text-align:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;">
+              <div style="font-size:28px;font-weight:800;color:#1e293b;">${tempo}</div>
+              <div style="font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Tempo</div>
+            </div>
+            <div style="text-align:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;">
+              <div style="font-size:28px;font-weight:800;color:${statusColor};">${perc}%</div>
+              <div style="font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Aproveitamento</div>
+            </div>
+          </div>
 
-        <div class="footer">
-          Relatorio gerado em ${dataFormatada} &bull; Teste de Raciocinio Logico e Atencao Concentrada
+          <!-- DETALHAMENTO DAS QUESTOES -->
+          <div style="margin-bottom:20px;">
+            <h2 style="font-size:14px;color:#0a1628;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding-bottom:10px;border-bottom:2px solid #e2e8f0;margin-bottom:16px;">
+              Detalhamento por Questao
+            </h2>
+            ${questoesHTML}
+          </div>
+
+          <!-- RODAPE -->
+          <div style="text-align:center;padding-top:20px;border-top:2px solid #e2e8f0;margin-top:16px;">
+            <p style="font-size:11px;color:#94a3b8;">
+              Relatorio gerado em ${dataFormatada}
+            </p>
+            <p style="font-size:11px;color:#94a3b8;margin-top:2px;">
+              Teste de Raciocinio Logico e Atencao Concentrada &mdash; Processo Seletivo
+            </p>
+          </div>
+
         </div>
       </body>
       </html>
@@ -293,7 +333,7 @@ export default function DashboardPage() {
       printWindow.document.close();
       setTimeout(() => {
         printWindow.print();
-      }, 300);
+      }, 400);
     }
   }
 
