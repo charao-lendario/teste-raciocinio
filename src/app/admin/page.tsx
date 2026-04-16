@@ -41,25 +41,25 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a1628] via-[#0f1f3a] to-[#0a1628] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a1628] via-[#0f1f3a] to-[#0a1628] px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="w-full max-w-md">
         {/* Card */}
-        <div className="bg-[#111d32] border border-[#1e3050] rounded-3xl p-10 shadow-2xl relative overflow-hidden">
+        <div className="bg-[#111d32] border border-[#1e3050] rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden">
           {/* Soft glow behind icon */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-32 bg-[#c9a84c]/10 blur-3xl rounded-full pointer-events-none" />
 
           {/* Header */}
-          <div className="flex flex-col items-center mb-8 relative">
-            <div className="mb-4">
-              <Shield size={52} color="#c9a84c" strokeWidth={1.5} />
+          <div className="flex flex-col items-center mb-6 sm:mb-8 relative">
+            <div className="mb-3 sm:mb-4">
+              <Shield size={44} color="#c9a84c" strokeWidth={1.5} className="sm:w-[52px] sm:h-[52px]" />
             </div>
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-2 sm:mb-3">
               <BadgeCheck size={14} className="text-[#c9a84c]" />
               <span className="text-[#c9a84c] text-xs font-semibold uppercase tracking-widest">
                 Painel de Gestão RH
               </span>
             </div>
-            <h1 className="text-white text-2xl font-bold text-center">Área Administrativa</h1>
+            <h1 className="text-white text-xl sm:text-2xl font-bold text-center">Área Administrativa</h1>
             <p className="text-gray-400 text-sm mt-2 text-center leading-relaxed">
               Acesse o painel de resultados dos candidatos
             </p>

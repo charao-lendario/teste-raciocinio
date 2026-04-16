@@ -45,8 +45,8 @@ function TesteSkeleton() {
     <div className="min-h-screen bg-gradient-to-b from-[#0a1628] via-[#0f1f3a] to-[#0a1628] text-white">
       {/* Header skeleton */}
       <div className="sticky top-0 z-10 bg-[#111d32] border-b border-[#243356] shadow-lg shadow-black/20">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-6 px-6 py-4">
-          <div className="h-5 w-32 bg-[#243356] rounded-full animate-pulse" />
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-3 sm:gap-6 px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+          <div className="h-5 w-32 bg-[#243356] rounded-full animate-pulse hidden sm:block" />
           <div className="flex-1 max-w-sm space-y-2">
             <div className="flex justify-between">
               <div className="h-3 w-24 bg-[#243356] rounded-full animate-pulse" />
@@ -59,8 +59,8 @@ function TesteSkeleton() {
       </div>
 
       {/* Card skeleton */}
-      <main className="max-w-3xl mx-auto py-10 px-4">
-        <div className="bg-[#1a2744] rounded-2xl p-10 border border-[#1e3050] shadow-xl space-y-6">
+      <main className="max-w-3xl mx-auto py-6 sm:py-10 px-4 sm:px-6 lg:px-8">
+        <div className="bg-[#1a2744] rounded-2xl p-5 sm:p-8 md:p-10 border border-[#1e3050] shadow-xl space-y-6">
           <div className="h-6 w-28 bg-[#243356] rounded-full animate-pulse" />
           <div className="space-y-3">
             <div className="h-4 w-full bg-[#243356] rounded-full animate-pulse" />
@@ -104,8 +104,8 @@ function ResultScreen({
   const dashOffset = circumference - (result.percentual / 100) * circumference;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a1628] via-[#0f1f3a] to-[#0a1628] flex items-center justify-center px-4 py-12">
-      <div className="relative w-full max-w-lg bg-[#1a2744] rounded-2xl p-10 shadow-2xl border border-[#1e3050] overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-[#0a1628] via-[#0f1f3a] to-[#0a1628] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="relative w-full max-w-lg bg-[#1a2744] rounded-2xl p-6 sm:p-8 md:p-10 shadow-2xl border border-[#1e3050] overflow-hidden">
 
         {/* Decorative gold circles for approved state */}
         {result.aprovado && (
@@ -195,22 +195,22 @@ function ResultScreen({
         </div>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-[#111d32] rounded-xl p-4 text-center">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8">
+          <div className="bg-[#111d32] rounded-xl p-3 sm:p-4 text-center">
             <Target size={18} className="text-[#c9a84c] mx-auto mb-2" />
-            <p className="text-2xl font-bold text-[#c9a84c]">
+            <p className="text-xl sm:text-2xl font-bold text-[#c9a84c]">
               {result.nota}/{TOTAL}
             </p>
             <p className="text-xs text-slate-400 mt-1">Acertos</p>
           </div>
-          <div className="bg-[#111d32] rounded-xl p-4 text-center">
+          <div className="bg-[#111d32] rounded-xl p-3 sm:p-4 text-center">
             <TrendingUp size={18} className="text-slate-300 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-white">{result.percentual}%</p>
+            <p className="text-xl sm:text-2xl font-bold text-white">{result.percentual}%</p>
             <p className="text-xs text-slate-400 mt-1">Aproveitamento</p>
           </div>
-          <div className="bg-[#111d32] rounded-xl p-4 text-center">
+          <div className="bg-[#111d32] rounded-xl p-3 sm:p-4 text-center">
             <Clock size={18} className="text-slate-300 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-white">{formatElapsed(timeLeft)}</p>
+            <p className="text-xl sm:text-2xl font-bold text-white">{formatElapsed(timeLeft)}</p>
             <p className="text-xs text-slate-400 mt-1">Tempo gasto</p>
           </div>
         </div>
@@ -372,10 +372,10 @@ function TesteContent() {
     <div className="min-h-screen bg-gradient-to-b from-[#0a1628] via-[#0f1f3a] to-[#0a1628] text-white">
       {/* Top bar */}
       <header className="sticky top-0 z-10 bg-[#111d32] border-b border-[#243356] shadow-lg shadow-black/20">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-6 px-6 py-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-3 sm:gap-6 px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
 
           {/* Left: question counter */}
-          <div className="flex items-center gap-2 text-sm text-slate-300 min-w-[140px]">
+          <div className="flex items-center gap-2 text-sm text-slate-300 min-w-0 sm:min-w-[140px]">
             <FileText size={17} className="text-[#c9a84c] flex-shrink-0" />
             <span>
               Questão{' '}
@@ -387,7 +387,7 @@ function TesteContent() {
           </div>
 
           {/* Center: progress bar */}
-          <div className="flex-1 max-w-sm">
+          <div className="flex-1 max-w-sm hidden sm:block">
             <div className="flex items-center justify-between text-xs text-slate-400 mb-1.5">
               <span>{answeredCount} respondidas</span>
               <span>{progressPercent}%</span>
@@ -402,7 +402,7 @@ function TesteContent() {
 
           {/* Right: timer */}
           <div
-            className={`flex items-center gap-2 font-mono font-bold text-base min-w-[100px] justify-end ${
+            className={`flex items-center gap-1.5 sm:gap-2 font-mono font-bold text-sm sm:text-base min-w-0 sm:min-w-[100px] justify-end ${
               isTimeLow ? 'text-red-400' : 'text-white'
             }`}
           >
@@ -416,8 +416,8 @@ function TesteContent() {
       </header>
 
       {/* Main content */}
-      <main className="max-w-3xl mx-auto py-10 px-4">
-        <div className="bg-[#1a2744] rounded-2xl p-10 border border-[#1e3050] shadow-xl">
+      <main className="max-w-3xl mx-auto py-5 sm:py-8 md:py-10 px-4 sm:px-6 lg:px-8">
+        <div className="bg-[#1a2744] rounded-2xl p-5 sm:p-8 md:p-10 border border-[#1e3050] shadow-xl">
 
           {/* Question badge + text */}
           <div className="mb-6">
@@ -425,7 +425,7 @@ function TesteContent() {
               <FileText size={12} />
               Questão {currentQuestion + 1}
             </span>
-            <p className="text-xl font-medium text-white leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl font-medium text-white leading-relaxed">
               {question.text}
             </p>
           </div>
@@ -433,7 +433,7 @@ function TesteContent() {
           <hr className="border-[#243356]/50 mb-6" />
 
           {/* Options */}
-          <div className="flex flex-col gap-4 mb-10">
+          <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-10">
             {question.options.map((option, idx) => {
               const letter = OPTION_LETTERS[idx];
               const isSelected = answers[currentQuestion] === option;
@@ -441,7 +441,7 @@ function TesteContent() {
                 <button
                   key={idx}
                   onClick={() => selectAnswer(option)}
-                  className={`flex items-center gap-4 w-full text-left rounded-xl p-5 border-2 transition-all duration-200 cursor-pointer ${
+                  className={`flex items-center gap-3 sm:gap-4 w-full text-left rounded-xl p-3.5 sm:p-5 border-2 transition-all duration-200 cursor-pointer ${
                     isSelected
                       ? 'border-[#c9a84c] border-l-4 border-l-[#c9a84c] bg-[#c9a84c]/5 hover:shadow-md hover:shadow-[#c9a84c]/10'
                       : 'border-[#243356] bg-[#111d32] hover:bg-[#1a2744] hover:border-[#3d5070] hover:shadow-md hover:shadow-[#c9a84c]/10 hover:-translate-y-0.5'
@@ -449,7 +449,7 @@ function TesteContent() {
                 >
                   {/* Letter circle */}
                   <span
-                    className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 ${
+                    className={`flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold border-2 ${
                       isSelected
                         ? 'border-[#c9a84c] bg-[#c9a84c]/15 text-[#c9a84c]'
                         : 'border-[#3d5070] text-slate-400'
@@ -479,13 +479,13 @@ function TesteContent() {
           </div>
 
           {/* Navigation */}
-          <div className="pt-6 border-t border-[#243356]/50">
-            <div className="flex items-center justify-between gap-3 mb-5">
+          <div className="pt-4 sm:pt-6 border-t border-[#243356]/50">
+            <div className="flex items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-5">
               {/* Previous */}
               <button
                 onClick={goPrev}
                 disabled={isFirst}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#243356] text-white text-sm font-medium transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#2d3f66] disabled:hover:bg-[#243356] hover:-translate-y-0.5"
+                className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-[#243356] text-white text-sm font-medium transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#2d3f66] disabled:hover:bg-[#243356] hover:-translate-y-0.5"
               >
                 <ArrowLeft size={16} />
                 Anterior
@@ -496,7 +496,7 @@ function TesteContent() {
                 <button
                   onClick={handleFinish}
                   disabled={!allAnswered || isSubmitting}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl bg-[#c9a84c] hover:bg-[#b8943d] text-[#0a1628] text-sm font-bold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#c9a84c] shadow-lg shadow-[#c9a84c]/20 hover:-translate-y-0.5 ${
+                  className={`flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-[#c9a84c] hover:bg-[#b8943d] text-[#0a1628] text-sm font-bold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#c9a84c] shadow-lg shadow-[#c9a84c]/20 hover:-translate-y-0.5 ${
                     allAnswered && !isSubmitting ? 'animate-pulse' : ''
                   }`}
                 >
@@ -506,7 +506,7 @@ function TesteContent() {
               ) : (
                 <button
                   onClick={goNext}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#c9a84c] hover:bg-[#b8943d] text-[#0a1628] text-sm font-bold transition-all duration-200 hover:-translate-y-0.5"
+                  className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-[#c9a84c] hover:bg-[#b8943d] text-[#0a1628] text-sm font-bold transition-all duration-200 hover:-translate-y-0.5"
                 >
                   Próxima
                   <ArrowRight size={16} />
@@ -515,7 +515,7 @@ function TesteContent() {
             </div>
 
             {/* Question dots */}
-            <div className="flex items-center flex-wrap justify-center gap-2 mb-3">
+            <div className="flex items-center flex-wrap justify-center gap-1.5 sm:gap-2 mb-3">
               {questions.map((_, idx) => {
                 const isCurrent = idx === currentQuestion;
                 const isAnswered = answers[idx] !== undefined;

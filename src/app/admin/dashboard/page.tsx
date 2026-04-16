@@ -449,11 +449,11 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gradient-to-b from-[#0a1628] via-[#0d1a30] to-[#0a1628]">
       {/* Header */}
       <header className="bg-[#111d32]/90 border-b border-[#1e3050] backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-8 lg:px-12 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <BarChart3 size={24} color="#c9a84c" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 flex items-center justify-between">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <BarChart3 size={22} color="#c9a84c" className="shrink-0 sm:w-[24px] sm:h-[24px]" />
             <div>
-              <h1 className="text-white font-bold text-lg leading-none">Painel de Resultados</h1>
+              <h1 className="text-white font-bold text-base sm:text-lg leading-none">Painel de Resultados</h1>
               <span className="text-[#c9a84c] text-xs font-semibold uppercase tracking-widest">
                 Painel RH
               </span>
@@ -479,60 +479,60 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-8 lg:px-12 py-8 flex flex-col gap-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col gap-5 sm:gap-8">
         {/* Stats cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5">
           {/* Total */}
-          <div className="bg-[#111d32] border border-[#1e3050] rounded-2xl p-6 flex items-center gap-4 relative overflow-hidden">
+          <div className="bg-[#111d32] border border-[#1e3050] rounded-xl sm:rounded-2xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4 relative overflow-hidden">
             <div className="bg-blue-500/10 rounded-full p-3 shrink-0">
               <Users size={22} className="text-blue-400" />
             </div>
             <div>
               <p className="text-gray-400 text-xs uppercase tracking-wider font-medium">Total de Candidatos</p>
-              <p className="text-white text-3xl font-bold mt-0.5">{loading ? '—' : candidatos.length}</p>
+              <p className="text-white text-xl sm:text-3xl font-bold mt-0.5">{loading ? '—' : candidatos.length}</p>
             </div>
             <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500/40" />
           </div>
 
           {/* Aprovados */}
-          <div className="bg-[#111d32] border border-[#1e3050] rounded-2xl p-6 flex items-center gap-4 relative overflow-hidden">
+          <div className="bg-[#111d32] border border-[#1e3050] rounded-xl sm:rounded-2xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4 relative overflow-hidden">
             <div className="bg-green-500/10 rounded-full p-3 shrink-0">
               <CheckCircle size={22} className="text-green-400" />
             </div>
             <div>
               <p className="text-gray-400 text-xs uppercase tracking-wider font-medium">Aprovados</p>
-              <p className="text-white text-3xl font-bold mt-0.5">{loading ? '—' : totalAprovados}</p>
+              <p className="text-white text-xl sm:text-3xl font-bold mt-0.5">{loading ? '—' : totalAprovados}</p>
             </div>
             <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-green-500/40" />
           </div>
 
           {/* Reprovados */}
-          <div className="bg-[#111d32] border border-[#1e3050] rounded-2xl p-6 flex items-center gap-4 relative overflow-hidden">
+          <div className="bg-[#111d32] border border-[#1e3050] rounded-xl sm:rounded-2xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4 relative overflow-hidden">
             <div className="bg-red-500/10 rounded-full p-3 shrink-0">
               <XCircle size={22} className="text-red-400" />
             </div>
             <div>
               <p className="text-gray-400 text-xs uppercase tracking-wider font-medium">Reprovados</p>
-              <p className="text-white text-3xl font-bold mt-0.5">{loading ? '—' : totalReprovados}</p>
+              <p className="text-white text-xl sm:text-3xl font-bold mt-0.5">{loading ? '—' : totalReprovados}</p>
             </div>
             <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-500/40" />
           </div>
 
           {/* Media */}
-          <div className="bg-[#111d32] border border-[#1e3050] rounded-2xl p-6 flex items-center gap-4 relative overflow-hidden">
+          <div className="bg-[#111d32] border border-[#1e3050] rounded-xl sm:rounded-2xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4 relative overflow-hidden">
             <div className="bg-[#c9a84c]/10 rounded-full p-3 shrink-0">
               <TrendingUp size={22} className="text-[#c9a84c]" />
             </div>
             <div>
               <p className="text-gray-400 text-xs uppercase tracking-wider font-medium">Media Geral</p>
-              <p className="text-white text-3xl font-bold mt-0.5">{loading ? '—' : `${mediaGeral}%`}</p>
+              <p className="text-white text-xl sm:text-3xl font-bold mt-0.5">{loading ? '—' : `${mediaGeral}%`}</p>
             </div>
             <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#c9a84c]/40" />
           </div>
         </div>
 
         {/* Filter bar */}
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
           <div className="flex items-center gap-3 bg-[#111d32] border border-[#243356] rounded-xl px-4 flex-1 focus-within:border-[#c9a84c] transition-colors">
             <Search size={16} className="text-gray-500 shrink-0" />
             <input
@@ -562,20 +562,20 @@ export default function DashboardPage() {
         </div>
 
         {/* Table */}
-        <div className="bg-[#111d32] border border-[#1e3050] rounded-2xl overflow-hidden">
+        <div className="bg-[#111d32] border border-[#1e3050] rounded-xl sm:rounded-2xl overflow-hidden">
           {loading ? (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-[#0d1729] text-gray-500 uppercase text-xs tracking-wider">
-                    <th className="text-left px-4 py-3 font-medium">Nome</th>
-                    <th className="text-left px-4 py-3 font-medium">Email</th>
-                    <th className="text-left px-4 py-3 font-medium">Telefone</th>
-                    <th className="text-left px-4 py-3 font-medium">Nota</th>
-                    <th className="text-left px-4 py-3 font-medium">Percentual</th>
-                    <th className="text-left px-4 py-3 font-medium">Status</th>
-                    <th className="text-left px-4 py-3 font-medium">Data</th>
-                    <th className="text-left px-4 py-3 font-medium">Acoes</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Nome</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Email</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Telefone</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Nota</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Percentual</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Status</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Data</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Acoes</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -604,14 +604,14 @@ export default function DashboardPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-[#0d1729] text-gray-500 uppercase text-xs tracking-wider">
-                    <th className="text-left px-4 py-3 font-medium">Nome</th>
-                    <th className="text-left px-4 py-3 font-medium">Email</th>
-                    <th className="text-left px-4 py-3 font-medium">Telefone</th>
-                    <th className="text-left px-4 py-3 font-medium">Nota</th>
-                    <th className="text-left px-4 py-3 font-medium">Percentual</th>
-                    <th className="text-left px-4 py-3 font-medium">Status</th>
-                    <th className="text-left px-4 py-3 font-medium">Data</th>
-                    <th className="text-left px-4 py-3 font-medium">Acoes</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Nome</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Email</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Telefone</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Nota</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Percentual</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Status</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Data</th>
+                    <th className="text-left px-4 py-3 font-medium whitespace-nowrap">Acoes</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -622,10 +622,10 @@ export default function DashboardPage() {
                         idx === 0 ? 'border-t-0' : ''
                       }`}
                     >
-                      <td className="px-4 py-3 text-white font-medium">{c.nome_completo}</td>
-                      <td className="px-4 py-3 text-gray-400">{c.email}</td>
-                      <td className="px-4 py-3 text-gray-400">{c.telefone}</td>
-                      <td className="px-4 py-3 text-gray-300">{c.nota != null ? `${c.nota}/20` : '—'}</td>
+                      <td className="px-4 py-3 text-white font-medium whitespace-nowrap">{c.nome_completo}</td>
+                      <td className="px-4 py-3 text-gray-400 whitespace-nowrap">{c.email}</td>
+                      <td className="px-4 py-3 text-gray-400 whitespace-nowrap">{c.telefone}</td>
+                      <td className="px-4 py-3 text-gray-300 whitespace-nowrap">{c.nota != null ? `${c.nota}/20` : '—'}</td>
                       <td
                         className={`px-4 py-3 font-semibold ${
                           c.percentual != null ? (c.percentual >= 70 ? 'text-green-400' : 'text-red-400') : 'text-gray-500'
@@ -682,7 +682,7 @@ export default function DashboardPage() {
             if (e.target === e.currentTarget) closeModal();
           }}
         >
-          <div className="bg-[#111d32] border border-[#1e3050] rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-hidden shadow-2xl flex flex-col">
+          <div className="bg-[#111d32] border border-[#1e3050] rounded-2xl sm:rounded-3xl max-w-2xl w-full max-h-[90vh] sm:max-h-[85vh] overflow-hidden shadow-2xl flex flex-col">
             {loadingDetalhe || !detalhe ? (
               <div className="flex items-center justify-center h-56">
                 <div className="flex flex-col items-center gap-3">
@@ -693,12 +693,12 @@ export default function DashboardPage() {
             ) : (
               <>
                 {/* Modal Header — sticky */}
-                <div className="flex items-center justify-between px-6 py-5 border-b border-[#1e3050] bg-[#111d32] shrink-0">
-                  <div>
+                <div className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 border-b border-[#1e3050] bg-[#111d32] shrink-0">
+                  <div className="min-w-0 flex-1 mr-3">
                     <p className="text-gray-500 text-xs uppercase tracking-wider font-medium mb-0.5">
                       Detalhe do Candidato
                     </p>
-                    <h2 className="text-white font-bold text-xl leading-tight">
+                    <h2 className="text-white font-bold text-lg sm:text-xl leading-tight truncate">
                       {detalhe.candidato.nome_completo}
                     </h2>
                   </div>
@@ -712,7 +712,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Scrollable content */}
-                <div className="overflow-y-auto flex-1 p-6 flex flex-col gap-5">
+                <div className="overflow-y-auto flex-1 p-4 sm:p-6 flex flex-col gap-4 sm:gap-5">
                   {/* Contact info cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="bg-[#0d1729] border border-[#1e3050] rounded-xl p-4 flex items-start gap-3">
@@ -855,7 +855,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Footer buttons */}
-                <div className="px-6 py-4 border-t border-[#1e3050] bg-[#111d32] shrink-0 flex gap-3">
+                <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-[#1e3050] bg-[#111d32] shrink-0 flex gap-2 sm:gap-3">
                   <button
                     onClick={() => downloadPDF(detalhe)}
                     className="flex-1 flex items-center justify-center gap-2 bg-[#c9a84c] hover:bg-[#b8952f] text-[#0a1628] font-semibold rounded-xl py-3 transition-all text-sm cursor-pointer"
@@ -884,8 +884,8 @@ export default function DashboardPage() {
             if (e.target === e.currentTarget) closeChangePassword();
           }}
         >
-          <div className="bg-[#111d32] border border-[#1e3050] rounded-3xl max-w-md w-full shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-5 border-b border-[#1e3050]">
+          <div className="bg-[#111d32] border border-[#1e3050] rounded-2xl sm:rounded-3xl max-w-md w-full shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 border-b border-[#1e3050]">
               <div>
                 <p className="text-gray-500 text-xs uppercase tracking-wider font-medium mb-0.5">Segurança</p>
                 <h2 className="text-white font-bold text-lg">Alterar Senha</h2>

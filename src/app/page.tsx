@@ -73,12 +73,12 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#0a1628] via-[#0f1f3a] to-[#0a1628] px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#0a1628] via-[#0f1f3a] to-[#0a1628] px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="w-full max-w-lg">
         {step === "landing" ? (
-          <div className="bg-[#1a2744] border border-[#1e3050] rounded-3xl shadow-2xl p-10 transition-all duration-200">
+          <div className="bg-[#1a2744] border border-[#1e3050] rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 transition-all duration-200">
             {/* Progress indicator */}
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
               <span className="text-xs text-gray-500 font-medium uppercase tracking-widest">
                 Passo 1 de 2
               </span>
@@ -89,23 +89,23 @@ export default function Home() {
             </div>
 
             {/* Icon with glow */}
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-5 sm:mb-6">
               <div className="relative">
                 <div className="absolute inset-0 bg-[#c9a84c]/10 blur-3xl rounded-full scale-150" />
-                <Brain size={52} color="#c9a84c" strokeWidth={1.5} className="relative z-10" />
+                <Brain size={44} color="#c9a84c" strokeWidth={1.5} className="relative z-10 sm:w-[52px] sm:h-[52px]" />
               </div>
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl font-bold text-white text-center leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white text-center leading-tight">
               Teste de Raciocinio Logico
             </h1>
-            <p className="text-lg text-gray-400 text-center mt-2 opacity-80">
+            <p className="text-base sm:text-lg text-gray-400 text-center mt-2 opacity-80">
               e Atencao Concentrada
             </p>
 
             {/* Divider */}
-            <hr className="border-[#1e3050] my-7" />
+            <hr className="border-[#1e3050] my-5 sm:my-7" />
 
             {/* Description */}
             <p className="text-gray-400 text-sm text-center mb-6 leading-relaxed">
@@ -115,7 +115,7 @@ export default function Home() {
             </p>
 
             {/* Bullet points card */}
-            <ul className="bg-[#111d32]/50 rounded-xl p-5 space-y-4 mb-8">
+            <ul className="bg-[#111d32]/50 rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4 mb-6 sm:mb-8">
               <li className="flex items-center gap-3 text-gray-200 text-sm">
                 <CheckCircle size={18} color="#c9a84c" className="shrink-0" />
                 <span>20 questoes de multipla escolha</span>
@@ -153,9 +153,9 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="bg-[#1a2744] border border-[#1e3050] rounded-3xl shadow-2xl p-10 transition-all duration-200">
+          <div className="bg-[#1a2744] border border-[#1e3050] rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 transition-all duration-200">
             {/* Progress indicator */}
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
               <span className="text-xs text-gray-500 font-medium uppercase tracking-widest">
                 Passo 2 de 2
               </span>
@@ -166,18 +166,18 @@ export default function Home() {
             </div>
 
             {/* Icon with glow */}
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-5 sm:mb-6">
               <div className="relative">
                 <div className="absolute inset-0 bg-[#c9a84c]/10 blur-3xl rounded-full scale-150" />
-                <UserCircle size={52} color="#c9a84c" strokeWidth={1.5} className="relative z-10" />
+                <UserCircle size={44} color="#c9a84c" strokeWidth={1.5} className="relative z-10 sm:w-[52px] sm:h-[52px]" />
               </div>
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl font-bold text-white text-center">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white text-center">
               Dados do Candidato
             </h1>
-            <p className="text-base text-gray-400 text-center mt-2 mb-7 opacity-80">
+            <p className="text-sm sm:text-base text-gray-400 text-center mt-2 mb-5 sm:mb-7 opacity-80">
               Preencha seus dados para iniciar o teste
             </p>
 

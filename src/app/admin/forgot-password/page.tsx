@@ -37,16 +37,16 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a1628] via-[#0f1f3a] to-[#0a1628] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a1628] via-[#0f1f3a] to-[#0a1628] px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="w-full max-w-md">
-        <div className="bg-[#111d32] border border-[#1e3050] rounded-3xl p-10 shadow-2xl relative overflow-hidden">
+        <div className="bg-[#111d32] border border-[#1e3050] rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-32 bg-[#c9a84c]/10 blur-3xl rounded-full pointer-events-none" />
 
-          <div className="flex flex-col items-center mb-8 relative">
-            <div className="mb-4">
-              <Shield size={52} color="#c9a84c" strokeWidth={1.5} />
+          <div className="flex flex-col items-center mb-6 sm:mb-8 relative">
+            <div className="mb-3 sm:mb-4">
+              <Shield size={44} color="#c9a84c" strokeWidth={1.5} className="sm:w-[52px] sm:h-[52px]" />
             </div>
-            <h1 className="text-white text-2xl font-bold text-center">Recuperar Senha</h1>
+            <h1 className="text-white text-xl sm:text-2xl font-bold text-center">Recuperar Senha</h1>
             <p className="text-gray-400 text-sm mt-2 text-center leading-relaxed">
               Digite seu email para receber o link de redefinição
             </p>
