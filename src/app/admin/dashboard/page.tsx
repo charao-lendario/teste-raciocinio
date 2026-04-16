@@ -21,6 +21,11 @@ import {
   Clock,
   Award,
   Download,
+  KeyRound,
+  Lock,
+  EyeOff,
+  AlertCircle,
+  CheckCircle2,
 } from 'lucide-react';
 import { questions } from '@/lib/questions';
 
@@ -90,6 +95,14 @@ export default function DashboardPage() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [detalhe, setDetalhe] = useState<CandidatoDetalhe | null>(null);
   const [loadingDetalhe, setLoadingDetalhe] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [cpCurrentPassword, setCpCurrentPassword] = useState('');
+  const [cpNewPassword, setCpNewPassword] = useState('');
+  const [cpConfirmPassword, setCpConfirmPassword] = useState('');
+  const [cpShowPassword, setCpShowPassword] = useState(false);
+  const [cpLoading, setCpLoading] = useState(false);
+  const [cpError, setCpError] = useState('');
+  const [cpSuccess, setCpSuccess] = useState(false);
 
   const getToken = () => {
     if (typeof window === 'undefined') return null;
@@ -352,6 +365,62 @@ export default function DashboardPage() {
     }
   }
 
+  async function handleChangePassword(e: React.FormEvent) {
+    e.preventDefault();
+    setCpError('');
+
+    if (cpNewPassword !== cpConfirmPassword) {
+      setCpError('As senhas não coincidem');
+      return;
+    }
+
+    if (cpNewPassword.length < 6) {
+      setCpError('A nova senha deve ter pelo menos 6 caracteres');
+      return;
+    }
+
+    setCpLoading(true);
+    const token = getToken();
+
+    try {
+      const res = await fetch('/api/admin/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          currentPassword: cpCurrentPassword,
+          newPassword: cpNewPassword,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setCpError(data.error || 'Erro ao alterar senha');
+        return;
+      }
+
+      setCpSuccess(true);
+    } catch {
+      setCpError('Erro ao conectar com o servidor');
+    } finally {
+      setCpLoading(false);
+    }
+  }
+
+  function closeChangePassword() {
+    setShowChangePassword(false);
+    setCpCurrentPassword('');
+    setCpNewPassword('');
+    setCpConfirmPassword('');
+    setCpShowPassword(false);
+    setCpError('');
+    setCpSuccess(false);
+    setCpLoading(false);
+  }
+
   function handleLogout() {
     localStorage.removeItem('admin_token');
     router.push('/admin');
@@ -390,13 +459,23 @@ export default function DashboardPage() {
               </span>
             </div>
           </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 bg-[#1e3050] hover:bg-[#243356] border border-[#243356] hover:border-[#c9a84c]/40 text-gray-300 hover:text-white rounded-xl px-4 py-2 transition-all text-sm font-medium"
-          >
-            <LogOut size={16} />
-            Sair
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowChangePassword(true)}
+              className="flex items-center gap-2 bg-[#1e3050] hover:bg-[#243356] border border-[#243356] hover:border-[#c9a84c]/40 text-gray-300 hover:text-white rounded-xl px-4 py-2 transition-all text-sm font-medium"
+              title="Alterar senha"
+            >
+              <KeyRound size={16} />
+              <span className="hidden sm:inline">Alterar Senha</span>
+            </button>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 bg-[#1e3050] hover:bg-[#243356] border border-[#243356] hover:border-[#c9a84c]/40 text-gray-300 hover:text-white rounded-xl px-4 py-2 transition-all text-sm font-medium"
+            >
+              <LogOut size={16} />
+              Sair
+            </button>
+          </div>
         </div>
       </header>
 
@@ -793,6 +872,129 @@ export default function DashboardPage() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Change Password Modal */}
+      {showChangePassword && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeChangePassword();
+          }}
+        >
+          <div className="bg-[#111d32] border border-[#1e3050] rounded-3xl max-w-md w-full shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-[#1e3050]">
+              <div>
+                <p className="text-gray-500 text-xs uppercase tracking-wider font-medium mb-0.5">Segurança</p>
+                <h2 className="text-white font-bold text-lg">Alterar Senha</h2>
+              </div>
+              <button
+                onClick={closeChangePassword}
+                className="w-10 h-10 rounded-full bg-[#243356] hover:bg-[#2d3f66] flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                aria-label="Fechar"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="p-6">
+              {cpSuccess ? (
+                <div className="flex flex-col items-center gap-4">
+                  <div className="flex items-center gap-3 bg-green-900/30 border border-green-800 rounded-xl p-4 w-full">
+                    <CheckCircle2 size={20} className="text-green-400 shrink-0" />
+                    <p className="text-green-400 text-sm">Senha alterada com sucesso!</p>
+                  </div>
+                  <button
+                    onClick={closeChangePassword}
+                    className="bg-[#c9a84c] hover:bg-[#b8952f] text-[#0a1628] font-semibold rounded-xl py-3 px-8 transition-all text-sm"
+                  >
+                    Fechar
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleChangePassword} className="flex flex-col gap-4">
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1.5 font-medium">Senha atual</label>
+                    <div className="flex items-center gap-3 bg-[#111d32] border border-[#243356] rounded-xl px-4 focus-within:border-[#c9a84c] transition-colors">
+                      <Lock size={16} className="text-gray-500 shrink-0" />
+                      <input
+                        type={cpShowPassword ? 'text' : 'password'}
+                        placeholder="Digite a senha atual"
+                        value={cpCurrentPassword}
+                        onChange={(e) => setCpCurrentPassword(e.target.value)}
+                        required
+                        className="bg-transparent border-0 text-white placeholder-gray-600 py-3 w-full focus:outline-none text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1.5 font-medium">Nova senha</label>
+                    <div className="flex items-center gap-3 bg-[#111d32] border border-[#243356] rounded-xl px-4 focus-within:border-[#c9a84c] transition-colors">
+                      <Lock size={16} className="text-gray-500 shrink-0" />
+                      <input
+                        type={cpShowPassword ? 'text' : 'password'}
+                        placeholder="Mínimo 6 caracteres"
+                        value={cpNewPassword}
+                        onChange={(e) => setCpNewPassword(e.target.value)}
+                        required
+                        minLength={6}
+                        className="bg-transparent border-0 text-white placeholder-gray-600 py-3 w-full focus:outline-none text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setCpShowPassword((prev) => !prev)}
+                        className="text-gray-500 hover:text-gray-300 transition-colors shrink-0"
+                        tabIndex={-1}
+                        aria-label={cpShowPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                      >
+                        {cpShowPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1.5 font-medium">Confirmar nova senha</label>
+                    <div className="flex items-center gap-3 bg-[#111d32] border border-[#243356] rounded-xl px-4 focus-within:border-[#c9a84c] transition-colors">
+                      <Lock size={16} className="text-gray-500 shrink-0" />
+                      <input
+                        type={cpShowPassword ? 'text' : 'password'}
+                        placeholder="Repita a nova senha"
+                        value={cpConfirmPassword}
+                        onChange={(e) => setCpConfirmPassword(e.target.value)}
+                        required
+                        minLength={6}
+                        className="bg-transparent border-0 text-white placeholder-gray-600 py-3 w-full focus:outline-none text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  {cpError && (
+                    <div className="flex items-center gap-3 bg-red-900/30 border border-red-800 rounded-xl p-3">
+                      <AlertCircle size={16} className="text-red-400 shrink-0" />
+                      <p className="text-red-400 text-sm">{cpError}</p>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={cpLoading}
+                    className="flex items-center justify-center gap-2 bg-[#c9a84c] hover:bg-[#b8952f] text-[#0a1628] font-semibold rounded-xl py-3.5 mt-1 transition-all shadow-lg shadow-[#c9a84c]/20 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 text-sm"
+                  >
+                    {cpLoading ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" />
+                        Alterando...
+                      </>
+                    ) : (
+                      'Alterar Senha'
+                    )}
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       )}
