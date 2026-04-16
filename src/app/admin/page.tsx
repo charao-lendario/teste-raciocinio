@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Shield, User, Lock, Loader2, Eye, EyeOff, AlertCircle, BadgeCheck } from 'lucide-react';
 
 export default function AdminLoginPage() {
@@ -118,6 +119,16 @@ export default function AdminLoginPage() {
                 <p className="text-red-400 text-sm">{error}</p>
               </div>
             )}
+
+            {/* Forgot password */}
+            <div className="flex justify-end -mt-1">
+              <Link
+                href="/admin/forgot-password"
+                className="text-[#c9a84c] hover:text-[#b8952f] text-xs font-medium transition-colors"
+              >
+                Esqueceu a senha?
+              </Link>
+            </div>
 
             {/* Submit button */}
             <button
