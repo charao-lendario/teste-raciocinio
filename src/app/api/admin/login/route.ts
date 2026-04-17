@@ -1,45 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
-import pool from '@/lib/db';
+
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'admin123';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { username, password } = body;
+    const { username, password } = await request.json();
 
-    if (!username || !password) {
-      return NextResponse.json(
-        { error: 'username e password são obrigatórios' },
-        { status: 400 }
-      );
+    if (username !== ADMIN_USER || password !== ADMIN_PASS) {
+      return NextResponse.json({ error: 'Credenciais inválidas' }, { status: 401 });
     }
 
-    const result = await pool.query(
-      'SELECT id, username, password_hash FROM admins WHERE username = $1',
-      [username]
-    );
-
-    if (result.rows.length === 0) {
-      return NextResponse.json(
-        { error: 'Credenciais inválidas' },
-        { status: 401 }
-      );
-    }
-
-    const admin = result.rows[0];
-    const passwordMatch = await bcrypt.compare(password, admin.password_hash);
-
-    if (!passwordMatch) {
-      return NextResponse.json(
-        { error: 'Credenciais inválidas' },
-        { status: 401 }
-      );
-    }
-
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-
-    const token = await new SignJWT({ sub: String(admin.id), username: admin.username })
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret');
+    const token = await new SignJWT({ sub: '1', username: ADMIN_USER })
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime('8h')
@@ -48,9 +22,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ token });
   } catch (error) {
     console.error('Erro no login:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 });
   }
 }
