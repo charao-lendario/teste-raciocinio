@@ -57,7 +57,8 @@ export default function Home() {
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(
-          (data as { message?: string })?.message ||
+          (data as { error?: string; message?: string })?.error ||
+            (data as { message?: string })?.message ||
             "Erro ao cadastrar candidato."
         );
       }
